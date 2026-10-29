@@ -15,13 +15,13 @@ set.seed(20220215)
 
 N <- 1000 # number of asset
 T <- 100 # number of time period
-b1 <- 1/100
+b1 <- 1/100 #c1的真实定价系数
 b2 <- 2/100
 
 # functions
 
 ## function that generates characteristics
-
+#资产特征
 char <- function(N,T){
   c <- runif(n=N, min = -1, max = 1)
   c_matrix <- t(matrix(rep(c,T), nrow=N)) + matrix(rnorm(n=N*T, mean=0, sd=0.1), nrow=T)
@@ -29,14 +29,14 @@ char <- function(N,T){
 }
 
 ## function that generate market beta
-
+#市场beta
 betaF <- function(c1, c2, c3, c4, c5, m1, m2){
     beta <- 1 + 0.5 * ( c2 + c3 + (1-(m1>0)*2) )
     return(beta)
 }
 
 ## function that reshape matrix into a stacked list
-
+#矩阵按列堆叠成向量 训练模型的时候好切分
 m2l <- function(m){
   d <- dim(m)
   t <- d[1] # nrow
@@ -56,7 +56,7 @@ m2l <- function(m){
 # simulation
 
 ## simulate the characteristics of assets
-
+#模拟特征 c1和c2有定价效应 c3影响beta c4和c5是噪声特征
 c1 <- char(N,T)
 c2 <- char(N,T)
 c3 <- char(N,T)
@@ -64,21 +64,21 @@ c4 <- char(N,T)
 c5 <- char(N,T)
 
 # simulate macroeconomic indicator
-
+#宏观指标
 m1 <- rnorm(n=T, mean=0, sd=1/100)
 m2 <- rnorm(n=T, mean=0, sd=1/100)
 
 ## simualte market factor
-
+#市场因子
 mkt <- rnorm(n=T, mean=1/100, sd=2/100)
 mkt <- matrix(mkt, nrow=T)
 
 ## simulate the market beta of assets
-
+#计算T*N的beta矩阵
 beta <- betaF(c1, c2, c3, c4, c5, m1, m2)
 
 ## simulate asset returns
-
+#资产收益率
 r <- matrix(0, T, N)
 dim(r)
 for (i in c(1:N)){
@@ -87,7 +87,7 @@ for (i in c(1:N)){
 
 # save
 ## stack data and save as rda
-
+#堆叠成面板数据并保存
 da <- data.frame(
       xret = m2l(r),
       id   = ceiling(1:(N*T)/N),

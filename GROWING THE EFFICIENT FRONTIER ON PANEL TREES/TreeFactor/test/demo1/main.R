@@ -1,17 +1,19 @@
+#加载包
 library(TreeFactor)
 library(rpart)
 library(ranger)
 
+#定义残差函数
 tf_residual = function(fit,Y,Z,H,months,no_H){
   # Tree Factor Models
-  regressor = Z
+  regressor = Z #暴露
   for(j in 1:dim(Z)[2])
   {
-    regressor[,j] = Z[,j] * fit$ft[months + 1]
+    regressor[,j] = Z[,j] * fit$ft[months + 1] #Z*估计的因子收益
   }
   if(!no_H)
   {
-    regressor = cbind(regressor, H)
+    regressor = cbind(regressor, H) #可选是否加入宏观H（让树不是从0开始 而是基于mkt因子学额外的因子）
   }
   # print(fit$R2*100)
   x <- as.matrix(regressor)
@@ -23,26 +25,27 @@ tf_residual = function(fit,Y,Z,H,months,no_H){
 }
 
 ###### parameters #####
-
+#超参数
 start = 1
-split = 80
-end   = 100
+split = 80 #训练期1-80
+end   = 100 #测试期 81-100
 
 case='demo' 
-max_depth=4
-min_leaf_size = 10
-max_depth_boosting = 3
+max_depth=4 #树深
+min_leaf_size = 10 #叶最小样本（至少有多少资产）
+max_depth_boosting = 3 #提升树深度变浅
 num_iter = 1000
-num_cutpoints = 4
+num_cutpoints = 4 #boosting 迭代次数、切分点数（切分考虑多少个阈值）
 equal_weight = TRUE
 no_H = TRUE
 abs_normalize = TRUE
 weighted_loss = FALSE
 stop_no_gain = FALSE
-nu = 1
+nu = 1 
 
 # this tiny regularization ensures the matrix inversion
 # penalty for the sigma (sigma + lambda I)^{-1} * mu
+#正则项
 lambda = 1e-4
 eta=1
 
@@ -52,14 +55,14 @@ load("../../data/simu_data.rda")
 print(names(da))
 
 data <- da
-data['lag_me'] = 1
+data['lag_me'] = 1 #资产设置为等权
 
 tmp = data[,c('id', 'date','xret','lag_me', 
               # 5
               'c1', 'c2', 'c3', 'c4', 'c5', # 9
               'm1','m2', # 11
               'mkt' # 12
-              )]
+              )] #允许在c1-c5中选择特征作为切分标准
 data = tmp
 rm(tmp)
 rm(da)
@@ -91,7 +94,7 @@ months_train = as.numeric(as.factor(data1[,c("date")]))
 months_train = months_train - 1 # start from 0
 stocks_train = as.numeric(as.factor(data1[,c("id")])) - 1
 Z_train = data1[, instruments]
-Z_train = cbind(1, Z_train)
+Z_train = cbind(1, Z_train) #暴露矩阵添加一列常数项作为截距
 portfolio_weight_train = data1[,c("lag_me")]
 loss_weight_train = data1[,c("lag_me")]
 num_months = length(unique(months_train))
@@ -104,6 +107,7 @@ H_train1 = data1[,c("mkt")]
 H_train1 = H_train1 * Z_train
 
 # train 1 
+#对收益拟合
 t = proc.time()
 fit1 = TreeFactor_APTree(R_train, Y_train1, X_train, Z_train, H_train1, portfolio_weight_train, 
 loss_weight_train, stocks_train, months_train, first_split_var, second_split_var, num_stocks, 
@@ -113,7 +117,7 @@ t = proc.time() - t
 print(t)
 
 # in sample check
-insPred1 = predict(fit1, X_train, R_train, months_train, portfolio_weight_train)
+insPred1 = predict(fit1, X_train, R_train, months_train, portfolio_weight_train) #样本内检查
 sum((insPred1$ft - fit1$ft)^2)
 print(fit1$R2)
 
@@ -128,6 +132,7 @@ beta_bf1 = solve(t(x)%*%x)%*%t(x)%*%y
 
 ###### train data 2 #####
 # the first H is the mkt
+#对残差boosting
 Y_train2 = res1
 no_H2 = TRUE
 
@@ -157,7 +162,7 @@ beta_bf2 = solve(t(x)%*%x)%*%t(x)%*%y
 ############# Train Period tf2 #############
 
 ###### test data #####
-
+#测试集
 X_test = data2[,splitting_chars]
 R_test = data2[,c("xret")]
 months_test = as.numeric(as.factor(data2[,c("date")]))
