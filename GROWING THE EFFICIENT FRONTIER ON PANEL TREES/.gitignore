@@ -1,0 +1,27 @@
+# P-Tree 复现：只跟踪"处理数据的代码"，不跟踪数据本身
+# ---------------------------------------------------------------
+# 数据一律不入库（体积大、且原始数据受 CSMAR 授权限制）
+raw_data/
+data/
+
+# audit/ 下只保留脚本与说明，诊断产物（结论 JSON、中间 CSV）不入库
+audit/*.json
+audit/*.csv
+audit/*.parquet
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Office / 编辑器临时文件
+~$*
+~WRL*.tmp
+*.tmp
+.DS_Store
+Thumbs.db
+
+# 临时导出
+_process_notes.txt
