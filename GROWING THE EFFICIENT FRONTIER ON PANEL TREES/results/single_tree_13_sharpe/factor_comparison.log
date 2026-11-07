@@ -1,9 +1,0 @@
-period kind strategy                   model   start     end   n  alpha_month  alpha_annual_arithmetic    HAC_t  HAC_asymptotic_p       R2
-  Test  Raw     Tree                     FF5 2016-01 2026-08 128     0.004795                 0.057536 5.089824      3.583965e-07 0.207645
-  Test  Raw     Tree FF5_three_factor_subset 2016-01 2026-08 128     0.005666                 0.067993 6.987807      2.792160e-12 0.122325
-kind                    strategy   n   start     end  annual_mean  annual_vol   Sharpe
- Raw                        Tree 128 2016-01 2026-08     0.074024    0.040077 1.847025
- Raw                          EW 128 2016-01 2026-08     0.054840    0.237764 0.230648
- Raw                          VW 128 2016-01 2026-08     0.034548    0.203299 0.169935
- Raw                     FF5_MVE 128 2016-01 2026-08     0.026424    0.038450 0.687218
- Raw FF5_three_factor_subset_MVE 128 2016-01 2026-08     0.031748    0.065603 0.483932

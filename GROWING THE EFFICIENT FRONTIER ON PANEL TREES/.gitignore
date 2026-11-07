@@ -9,6 +9,12 @@ audit/*.json
 audit/*.csv
 audit/*.parquet
 
+# 结果目录只跟踪图表与说明
+/results/**/*
+!/results/**/
+!/results/**/*.png
+!/results/**/*.md
+
 # Python
 __pycache__/
 *.py[cod]
