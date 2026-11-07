@@ -3,10 +3,13 @@ o <- Sys.getenv("PTREE_RESULTS_DIR", "results/single_tree_13")
 dir.create(o,recursive=TRUE,showWarnings=FALSE)
 cat("TreeFactor library:", find.package("TreeFactor"), "\n")
 a <- readRDS("data/r_input_v1.rds")
-keep <- c("X_ME","X_BM","X_EP","X_LEV","X_CASH","X_ROA","X_ROE","X_TURN","X_DOLVOL","X_MOM1M","X_OP","X_NOA","X_RNA")
+feature_set <- match.arg(Sys.getenv("PTREE_FEATURE_SET", "13"), c("13", "47"))
+keep <- switch(feature_set,
+ "13" = c("X_ME","X_BM","X_EP","X_LEV","X_CASH","X_ROA","X_ROE","X_TURN","X_DOLVOL","X_MOM1M","X_OP","X_NOA","X_RNA"),
+ "47" = setdiff(colnames(a$X), "X_ABR"))
 a$X <- a$X[,keep,drop=FALSE]
 a$features <- keep
-stopifnot(ncol(a$X)==13,all(is.finite(a$X)))
+stopifnot(ncol(a$X)==as.integer(feature_set),all(is.finite(a$X)))
 write.csv(data.frame(feature=keep),file.path(o,"features.csv"),row.names=FALSE)
 write.csv(data.frame(file=c("data/r_input_v1.rds","data/panel_v1.csv"),
  md5=unname(tools::md5sum(c("data/r_input_v1.rds","data/panel_v1.csv")))),
@@ -120,7 +123,8 @@ for (i in rev(seq_len(nrow(nodes)))) {
 }
 yy<-max(depth)-depth
 png(file.path(o,"tree.png"),width=2200,height=1200,res=140)
-plot(xx,yy,type="n",axes=FALSE,xlab="",ylab="",xlim=c(0,1),ylim=c(-.6,max(yy)+.6),main="Single P-Tree / 13 complete characteristics / training 2000-2015")
+plot(xx,yy,type="n",axes=FALSE,xlab="",ylab="",xlim=c(0,1),ylim=c(-.6,max(yy)+.6),
+ main=sprintf("Single P-Tree / %s characteristics / training 2000-2015", feature_set))
 for(i in seq_len(nrow(nodes))) {
  parent<-match(floor(nodes$id[i]/2),nodes$id)
  if(!is.na(parent))segments(xx[parent],yy[parent],xx[i],yy[i],col="grey60")
