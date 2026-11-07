@@ -60,6 +60,8 @@ def _load_quarterly() -> pd.DataFrame:
     disc["qm"] = (disc["mon"].astype(int) // 3)
     disc["qidx"] = disc["year"] * 4 + (disc["qm"] - 1)
     disc["annodt"] = pd.to_datetime(disc["Annodt"], errors="coerce")
+    disc = disc[disc["mon"].isin(_MONTH2REPTYP)].copy()
+    disc = disc[disc["Reptyp"] == disc["mon"].map(_MONTH2REPTYP)]
     disc = disc.dropna(subset=["annodt"]).sort_values("annodt")
     disc = disc.drop_duplicates(["Stkcd", "qidx"], keep="last")
 
@@ -68,7 +70,14 @@ def _load_quarterly() -> pd.DataFrame:
 
 
 def _calc(q: pd.DataFrame) -> pd.DataFrame:
-    g = q.groupby("Stkcd", sort=False)
+    # Insert absent calendar quarters before all rolling calculations.
+    blocks = []
+    for stock, group in q.groupby("Stkcd", sort=False):
+        grid = range(int(group["qidx"].min()), int(group["qidx"].max()) + 1)
+        block = group.set_index("qidx").reindex(grid).rename_axis("qidx").reset_index()
+        block["Stkcd"] = stock
+        blocks.append(block)
+    q = pd.concat(blocks, ignore_index=True)
 
     def lag4(col: str) -> pd.Series:
         s = q.set_index(["Stkcd", "qidx"])[col]
@@ -106,7 +115,7 @@ def build(p: pd.DataFrame) -> pd.DataFrame:
     left = p[["Stkcd", "Trdmnt"]].drop_duplicates().copy()
     left["month_end"] = pd.to_datetime(left["Trdmnt"] + "-01") + pd.offsets.MonthEnd(0)
     left = left.sort_values("month_end")
-    right = q[["Stkcd", "annodt"] + FEATURES_Q].sort_values("annodt")
+    right = q[["Stkcd", "annodt"] + FEATURES_Q].dropna(subset=["annodt"]).sort_values("annodt")
     out = pd.merge_asof(left, right, left_on="month_end", right_on="annodt",
                         by="Stkcd", direction="backward", allow_exact_matches=True)
     return out[["Stkcd", "Trdmnt"] + FEATURES_Q]

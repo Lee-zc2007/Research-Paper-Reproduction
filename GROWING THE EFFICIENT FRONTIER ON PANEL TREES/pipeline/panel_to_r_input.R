@@ -13,6 +13,7 @@
 #   Rscript pipeline/panel_to_r_input.R                  # 只构建 + 校验，保存入参 RDS
 #   Rscript pipeline/panel_to_r_input.R --train           # 额外训练一棵树
 #   Rscript pipeline/panel_to_r_input.R --train --train-end 2012-12
+#   Rscript pipeline/panel_to_r_input.R --csv data/other.csv   # 换输入文件
 #
 # 输出：
 #   data/r_input_v1.rds      13 个入参的对象（供以后直接 load 用）
@@ -36,7 +37,15 @@ if ("--train-end" %in% args) {
 script_path <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])
 root <- if (!is.na(script_path)) normalizePath(file.path(dirname(script_path), "..")) else getwd()
 
+# 输入文件：默认 data/model_input_v1.csv，可用 --csv 覆盖（相对路径按项目根解析）
 csv_path <- file.path(root, "data", "model_input_v1.csv")
+if ("--csv" %in% args) {
+  i <- which(args == "--csv")
+  if (i < length(args)) {
+    csv_path <- args[[i + 1]]
+    if (!grepl("^([A-Za-z]:|/)", csv_path)) csv_path <- file.path(root, csv_path)
+  }
+}
 if (!file.exists(csv_path)) stop("找不到 ", csv_path, "，请先运行 pipeline/panel_export.py")
 
 # R 库在用户目录（R_LIBS_USER 已由环境变量提供）

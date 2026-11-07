@@ -1,5 +1,6 @@
 #include "model.h"
 #include "APTree.h"
+#include <cmath>
 ////////////////////////////
 //
 //
@@ -421,6 +422,7 @@ void APTreeModel::calculate_criterion_one_variable(State &state, size_t var, std
             // mean variance efficient portfolio
             ft = all_portfolio * weight;
 
+            /* Original SSR criterion (retained for reference).
             for (size_t i = 0; i < state.num_obs_all; i++)
             {
                 for (size_t j = 0; j < (*state.Z).n_cols; j++)
@@ -443,12 +445,29 @@ void APTreeModel::calculate_criterion_one_variable(State &state, size_t var, std
                 output[i] = fastLm((*state.Y), this->regressor);
             }
 
+            */
+
+            // The outer split search minimizes the score.
+            const arma::vec factor_returns = ft.col(0);
+            if (factor_returns.n_elem >= 2 && factor_returns.is_finite())
+            {
+                const double volatility = arma::stddev(factor_returns);
+                if (std::isfinite(volatility) && volatility > 0.0)
+                {
+                    const double sharpe = arma::mean(factor_returns) / volatility;
+                    if (std::isfinite(sharpe))
+                    {
+                        output[i] = -sharpe;
+                    }
+                }
+            }
+
             if (state.stop_no_gain)
             {
-                // compare with overall loss, stop split if no gain
+                // Compare with the previously accepted split score.
                 if (output[i] >= state.overall_loss)
                 {
-                    // if cannot improve overall pricing error, discard this split candidate
+                    // Discard candidates that do not improve the split score.
                     output[i] = std::numeric_limits<double>::max();
                 }
             }

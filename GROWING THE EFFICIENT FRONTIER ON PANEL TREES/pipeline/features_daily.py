@@ -125,7 +125,7 @@ def monthly_aggregates() -> pd.DataFrame:
             d = d.sort_values(["Stkcd", "Trddt"])
             g = d.groupby("Stkcd", sort=False)
             d["cs"] = _cs_spread(d["Hiprc"], d["Loprc"],
-                                 g["Hiprc"].shift(-1), g["Loprc"].shift(-1))
+                                 g["Hiprc"].shift(1), g["Loprc"].shift(1))
 
             agg = d.groupby(["Stkcd", "ym"], sort=False).agg(
                 n=("r", "size"),
@@ -308,10 +308,12 @@ def abr(stocks: np.ndarray, months: list[str], midx: dict[str, int],
                 ci = int(np.searchsorted(dates, later[0]))
             lo_i, hi_i = max(ci - 1, 0), min(ci + 2, len(dates))
             win = arr[ri, lo_i:hi_i]
-            if np.isfinite(win).all() and len(win) >= 2:
+            if np.isfinite(win).all() and len(win) == 3:
                 si = sidx.get(stk)
                 if si is not None:
-                    res[si, midx[ym]] = float(win.sum())
+                    available_month = str(dates[hi_i - 1])[:7]
+                    if available_month in midx:
+                        res[si, midx[available_month]] = float(win.sum())
     return res
 
 

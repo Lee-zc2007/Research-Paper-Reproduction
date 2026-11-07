@@ -44,6 +44,15 @@ def build(p: pd.DataFrame, stocks: np.ndarray, months: list[str],
     RET = g("Mretwd")
     RETND = g("Mretnd")
 
+    # Structural-zero assumption only for otherwise valid balance sheets.
+    valid_report = (np.isfinite(TA) & (TA > 0) & np.isfinite(TL) & (TL >= 0)
+                    & np.isfinite(CASH) & (CASH >= 0) & np.isfinite(BE))
+    debt_parts = [STDEBT, LTDEBT, BOND]
+    filled = valid_report & np.logical_or.reduce([np.isnan(x) for x in debt_parts])
+    print(f"      debt structural-zero assumption: {int(filled.sum()):,} stock-months")
+    STDEBT, LTDEBT, BOND = [
+        np.where(valid_report & np.isnan(x), 0.0, x) for x in debt_parts
+    ]
     int_debt = STDEBT + LTDEBT + BOND
 
     def safe_div(a: np.ndarray, b: np.ndarray) -> np.ndarray:

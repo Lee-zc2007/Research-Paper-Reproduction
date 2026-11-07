@@ -1,0 +1,76 @@
+During startup - Warning messages:
+1: Setting LC_COLLATE=C.UTF-8 failed 
+2: Setting LC_CTYPE=C.UTF-8 failed 
+3: Setting LC_MONETARY=C.UTF-8 failed 
+4: Setting LC_TIME=C.UTF-8 failed 
+TreeFactor library: C:/Users/lenovo/R/ptree-sharpe-cd0a15083df340c7a18737c9a3a20e5f/library/TreeFactor 
+The split value candidates are -0.6, -0.2, 0.2, 0.6
+fitted tree 
+19
+1 8 -0.6 0 0
+2 0 -0.6 0 2
+4 4 -0.2 1 8
+8 0 0 0 0
+9 0 0 0 0
+5 0 0 0 0
+3 2 -0.6 0 1
+6 0 0.2 2 3
+12 8 -0.2 1 4
+24 0 0 0 0
+25 0 0 0 0
+13 0 0 0 0
+7 3 -0.6 0 5
+14 10 0.2 2 6
+28 0 0 0 0
+29 0 0 0 0
+15 0 -0.6 0 7
+30 0 0 0 0
+31 0 0 0 0
+
+Verified final split score equals negative monthly Sharpe: -1.083252 
+ [1] "R"             "X"             "Xorder"        "tree"         
+ [5] "leaf_weight"   "leaf_id"       "ft"            "portfolio"    
+ [9] "json"          "R2"            "all_criterion"
+             [,1]
+ [1,]  0.11863907
+ [2,]  0.21351884
+ [3,] -0.05628314
+ [4,]  0.07879367
+ [5,] -0.26774869
+ [6,] -0.05327602
+ [7,] -0.02822175
+ [8,]  0.08620781
+ [9,] -0.07536332
+[10,]  0.02194770
+null device 
+          1 
+                   period       kind strategy   n annual_mean annual_vol
+Test.Raw.1           Test        Raw     Tree 129  0.07410543 0.03992136
+Test.Raw.2           Test        Raw       EW 129  0.05234469 0.23697514
+Test.Raw.3           Test        Raw       VW 129  0.02922580 0.20325345
+Train.Raw.1         Train        Raw     Tree 192  0.10456032 0.02867860
+Train.Raw.2         Train        Raw       EW 192  0.19217302 0.34351887
+Train.Raw.3         Train        Raw       VW 192  0.11426822 0.30002804
+Test.Winsorized.1    Test Winsorized     Tree 129  0.07119383 0.03693298
+Test.Winsorized.2    Test Winsorized       EW 129  0.03559894 0.23596910
+Test.Winsorized.3    Test Winsorized       VW 129  0.02238295 0.20266175
+Train.Winsorized.1  Train Winsorized     Tree 192  0.10112769 0.02694946
+Train.Winsorized.2  Train Winsorized       EW 192  0.18390217 0.34239822
+Train.Winsorized.3  Train Winsorized       VW 192  0.11206237 0.29949395
+                      Sharpe max_drawdown
+Test.Raw.1         1.8562852 -0.044476655
+Test.Raw.2         0.2208868 -0.495562561
+Test.Raw.3         0.1437899 -0.384816898
+Train.Raw.1        3.6459356 -0.009955347
+Train.Raw.2        0.5594249 -0.692816619
+Train.Raw.3        0.3808585 -0.714265038
+Test.Winsorized.1  1.9276489 -0.039079408
+Test.Winsorized.2  0.1508627 -0.508794585
+Test.Winsorized.3  0.1104449 -0.394454120
+Train.Winsorized.1 3.7524939 -0.009995424
+Train.Winsorized.2 0.5371003 -0.692702461
+Train.Winsorized.3 0.3741724 -0.714794749
+null device 
+          1 
+null device 
+          1 

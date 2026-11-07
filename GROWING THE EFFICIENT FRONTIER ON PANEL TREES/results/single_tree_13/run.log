@@ -1,0 +1,74 @@
+During startup - Warning messages:
+1: Setting LC_COLLATE=C.UTF-8 failed 
+2: Setting LC_CTYPE=C.UTF-8 failed 
+3: Setting LC_MONETARY=C.UTF-8 failed 
+4: Setting LC_TIME=C.UTF-8 failed 
+The split value candidates are -0.6, -0.2, 0.2, 0.6
+fitted tree 
+19
+1 4 -0.6 0 0
+2 11 -0.2 1 1
+4 0 0 0 0
+5 3 0.2 2 2
+10 0 0 0 0
+11 0 0 0 0
+3 3 0.2 2 3
+6 1 -0.6 0 4
+12 0 0 0 0
+13 0 0 0 0
+7 4 0.6 3 5
+14 3 0.6 3 6
+28 7 -0.2 1 7
+56 0 0 0 0
+57 11 0.2 2 8
+114 0 0 0 0
+115 0 0 0 0
+29 0 0 0 0
+15 0 0 0 0
+
+ [1] "R"             "X"             "Xorder"        "tree"         
+ [5] "leaf_weight"   "leaf_id"       "ft"            "portfolio"    
+ [9] "json"          "R2"            "all_criterion"
+             [,1]
+ [1,] -0.01695873
+ [2,] -0.02636875
+ [3,]  0.07501183
+ [4,]  0.01037606
+ [5,]  0.28012510
+ [6,]  0.16789213
+ [7,]  0.12617505
+ [8,] -0.07952987
+ [9,] -0.13567136
+[10,] -0.08189111
+null device 
+          1 
+                   period       kind strategy   n annual_mean annual_vol
+Test.Raw.1           Test        Raw     Tree 129  0.01733267 0.06739647
+Test.Raw.2           Test        Raw       EW 129  0.05234469 0.23697514
+Test.Raw.3           Test        Raw       VW 129  0.02922580 0.20325345
+Train.Raw.1         Train        Raw     Tree 192  0.04561037 0.10541641
+Train.Raw.2         Train        Raw       EW 192  0.19217302 0.34351887
+Train.Raw.3         Train        Raw       VW 192  0.11426822 0.30002804
+Test.Winsorized.1    Test Winsorized     Tree 129  0.01463633 0.06709637
+Test.Winsorized.2    Test Winsorized       EW 129  0.03559894 0.23596910
+Test.Winsorized.3    Test Winsorized       VW 129  0.02238295 0.20266175
+Train.Winsorized.1  Train Winsorized     Tree 192  0.04402747 0.10450662
+Train.Winsorized.2  Train Winsorized       EW 192  0.18390217 0.34239822
+Train.Winsorized.3  Train Winsorized       VW 192  0.11206237 0.29949395
+                      Sharpe max_drawdown
+Test.Raw.1         0.2571747   -0.1144800
+Test.Raw.2         0.2208868   -0.4955626
+Test.Raw.3         0.1437899   -0.3848169
+Train.Raw.1        0.4326686   -0.2935425
+Train.Raw.2        0.5594249   -0.6928166
+Train.Raw.3        0.3808585   -0.7142650
+Test.Winsorized.1  0.2181389   -0.1170128
+Test.Winsorized.2  0.1508627   -0.5087946
+Test.Winsorized.3  0.1104449   -0.3944541
+Train.Winsorized.1 0.4212888   -0.2963763
+Train.Winsorized.2 0.5371003   -0.6927025
+Train.Winsorized.3 0.3741724   -0.7147947
+null device 
+          1 
+null device 
+          1 

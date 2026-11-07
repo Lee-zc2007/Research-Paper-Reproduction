@@ -36,6 +36,7 @@ def asof_coverage() -> None:
     rep["annodt"] = pd.to_datetime(rep["Annodt"], errors="coerce")
     rep["pm"] = rep["Accper"].str[:7]
     rep = rep.dropna(subset=["annodt"]).sort_values(["Stkcd", "annodt"])
+    rep = rep.drop_duplicates(["Stkcd", "pm"], keep="last")
 
     # 2) 报表（合并 A，剔除 01-01 期初行）
     def load(path, cols):
